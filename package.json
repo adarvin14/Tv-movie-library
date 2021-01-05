@@ -1,5 +1,5 @@
 {
-  "name": "Tv_movie_library",
+  "name": "tv_movie_library",
   "private": true,
   "dependencies": {
     "@rails/ujs": "^6.0.0",
