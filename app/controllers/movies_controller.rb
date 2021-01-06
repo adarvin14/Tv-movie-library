@@ -14,10 +14,6 @@ class MoviesController < ApplicationController
     render json: @movie
   end
 
-  # GET /movies/1/edit
-  def edit
-  end
-
   # POST /movies
   # POST /movies.json
   def create
@@ -25,7 +21,7 @@ class MoviesController < ApplicationController
     if @movie.save
       render json: @movie, status: :created, location: @movie
     else
-      render json: @novie.errors, status: :unprocessable_entity
+      render json: @movie.errors, status: :unprocessable_entity
     end
   end
 
