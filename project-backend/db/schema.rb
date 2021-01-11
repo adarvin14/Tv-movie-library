@@ -25,12 +25,4 @@ ActiveRecord::Schema.define(version: 2021_01_06_172124) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "tv_shows", force: :cascade do |t|
-    t.string "title"
-    t.integer "release_year"
-    t.integer "seasons"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
 end
