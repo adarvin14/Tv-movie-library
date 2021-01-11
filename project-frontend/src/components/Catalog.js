@@ -16,3 +16,22 @@ class Catalog {
         </form>
         <br> `  
     }
+
+    static newMovieForm(data){
+        let newMovieForm = document.getElementById('main')
+        newMovieForm.innerHTML += `
+        <form onsubmit="createMovie(); return false;">
+                <label>Movie Title: </label>
+                    <input id="movieTitle" placeholder="Title"></input>
+                <label>Release Year: </label>
+                    <input id="release_year" placeholder="Release Year"></input>
+                
+                    <input type="hidden" id="movieID"></input>
+                <input type="hidden" id="${data}"></input>
+                <input type="submit" value="Create Song">
+        </form>
+        <br> `  
+    }
+
+
+}
