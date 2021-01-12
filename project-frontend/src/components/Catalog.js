@@ -21,17 +21,27 @@ class Catalog {
         let newMovieForm = document.getElementById('main')
         newMovieForm.innerHTML += `
         <form onsubmit="createMovie(); return false;">
-                <label>Movie Title: </label>
-                    <input id="movieTitle" placeholder="Title"></input>
-                <label>Release Year: </label>
-                    <input id="release_year" placeholder="Release Year"></input>
-                
-                    <input type="hidden" id="movieID"></input>
-                <input type="hidden" id="${data}"></input>
-                <input type="submit" value="Create Song">
+            <label>Movie Title: </label>
+                <input id="movieTitle" placeholder="Title"></input>
+            <label>Release Year: </label>
+                <input id="release_year" placeholder="Release Year"></input>
+
+            <input type="hidden" id="movieID"></input>
+            <input type="hidden" id="${data}"></input>
+            <input type="submit" value="Create Song">
         </form>
         <br> `  
     }
 
+    catalogHTML = function() {
+        return `
+            <div class="card" catalog-id="${this.id}">
+            <h3><strong class="catalog-name">${this.name}</strong></h3>
+            <h3><strong class="catalog-movies">${this.movies}</strong></h3>
+        
+            <button class="delete-catalog-button">Delete Catalog</button> <br>
+            </div>
+        `
+    }
 
 }

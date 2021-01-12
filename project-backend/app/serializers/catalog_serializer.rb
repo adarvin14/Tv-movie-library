@@ -1,4 +1,4 @@
-class MovieSerializer < ActiveModel::Serializer
-    attributes :id, :title, :release_year
-    belongs_to :catalog
-end 
+class CatalogSerializer < ActiveModel::Serializer
+    attributes :id, :name
+    has_many :movies
+end    

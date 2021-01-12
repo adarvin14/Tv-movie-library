@@ -2,14 +2,12 @@ class CatalogsController < ApplicationController
   before_action :set_catalog, only: [:show, :update, :destroy]
 
   # GET /catalogs
-  # GET /catalogs.json
   def index
     @catalogs = Catalog.all
     render json: catalogs
   end
 
   # GET /catalogs/1
-  # GET /catalogs/1.json
   def show
     render json: @catalog
   end
