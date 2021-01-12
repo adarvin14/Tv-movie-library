@@ -132,4 +132,42 @@ function displayCatalog(e) {
     })
 }
 
+function removeCatalog(e) {
+    console.log(e.target)
+    let configObj = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    fetch(BASE_URL + `/catalog/${e.target.dataset.id}`, configObj)
+    .then(() => {
+        getCatalogs()}
+    )
+}
+
+function removeMovie(e) {
+    console.log(e.target)
+    let movieId = e.target.dataset.id
+    let configObj = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    fetch(BASE_URL + `/movies/${movieId}`, configObj)
+    .then(() => {
+        let buttons = document.querySelectorAll("li button")
+        buttons.forEach(b => {
+            if (b.dataset.id == movieId) {
+                b.parentElement.remove()
+                
+            }
+        })
+    })
+
+}
+
 
