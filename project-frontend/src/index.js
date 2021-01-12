@@ -69,7 +69,7 @@ function getCatalogs() {
         <br>
         <li>
         <a href="#" data-id="${catalog.id}">${catalog.name}</a>
-        - <button class="delete-catalog" data-id="${catalog.id}">Delete Catalog</button>
+            <button class="delete-catalog" data-id="${catalog.id}">Delete Catalog</button>
         </li>
         ` 
         })
@@ -123,7 +123,7 @@ function displayCatalog(e) {
         catalog.movies.forEach( movie => {
             main.innerHTML += `
             <li >${movie.title}
-             - <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
+                <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
             </li>
             `  
         })
@@ -163,11 +163,67 @@ function removeMovie(e) {
         buttons.forEach(b => {
             if (b.dataset.id == movieId) {
                 b.parentElement.remove()
-                
             }
         })
     })
 
 }
 
+function displayCreateMovieForm(e) {
+    let catalogId = e.target.dataset.id
+    let formDivT = document.querySelector('div#movie-form')
+    let htmlT = `
+        <br>
+        <form data-id="${catalogId}">
+            <label>Title:</label>
+            <input type="text" id = "title">
+            <label>Release Year:</label>
+            <input type="text" id = "release_year">
+            <input type="submit">
+        </form>
+        `
+    formDivT.innerHTML = htmlT
+   document.querySelector('form').addEventListener('submit', createMovie)
+}
+
+function clearMovieForm() {
+    let formDiv = document.querySelector('div#movie-form')
+    formDiv.innerHTML = ''
+}
+
+
+function createMovie(e) {
+    e.preventDefault()
+    let main = document.getElementById('main')
+    let catalogId = e.target.dataset.id
+    let movie = {
+        title: e.target.querySelector("#title").value,
+        release_year:  e.target.querySelector("#release_year").value,
+        catalog_id: catalogId
+    }
+
+    let configObj = {
+        method: 'POST',
+        body: JSON.stringify(movie),
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    fetch(BASE_URL + `/movies`, configObj)
+    .then(res => res .json()) 
+    .then(movie => {
+        
+        main.innerHTML += `
+            <li>${movie.description}
+                <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
+            </li>
+        `
+        clearThingForm()
+        attachClicksToButtons()
+        document.getElementById('thing-form').addEventListener('click', displayCreateThingForm) 
+        } 
+    )
+}
 
