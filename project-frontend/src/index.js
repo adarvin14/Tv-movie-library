@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", () => {
     getCategories()
 })
 
-function renderCatalogs() {
+function getCatalogs() {
     document.getElementById("new-catalog-form").innerHTML = ""
     document.getElementById("new-movie-form").innerHTML = ""
     const catalogs = await apiService.fetchCatalogs()
@@ -15,7 +15,14 @@ function renderCatalogs() {
         const newCatalog = new Catalog(catalog)
         main.innerHTML += newCatalog.renderCatalog() 
     })
-    attachClicksCatalog()
+    attachClicksToLinks()
+}
+
+function attachClicksToLinks() {
+    let catalogs = document.querySelectorAll("li a")
+    catalogs.forEach(catalog => {
+        catalog.addEventListener('click', showcatalog)
+    })
 }
 
 function displayCatalogForm() {
