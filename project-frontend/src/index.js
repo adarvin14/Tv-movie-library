@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'tcp://127.0.0.1:3000'
 
 window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('catalogs').addEventListener('click', getCatalogs)
