@@ -1,7 +1,6 @@
 const BASE_URL = 'http://localhost:3000'
 
 window.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('catalog-form').addEventListener('click', displayCreateForm)
     document.getElementById('catalogs').addEventListener('click', getCategories)
     getCategories()
 })
