@@ -97,4 +97,39 @@ function attachClicksToLinks() {
     })
 }
 
+function attachClicksToButtons() {
+    let movies = document.querySelectorAll(".delete-movie")
+    movies.forEach(movie => {
+        movie.addEventListener('click', removeMovie)
+    })
+}
+
+function displayCatalog(e) {
+    console.log(e.target)
+    let id = e.target.dataset.id
+    let main = document.getElementById('main')
+    main.innerHTML = ""
+    fetch(BASE_URL + `/catalogs/${id}`)
+    .then(resp => resp.json())
+    .then(catalog => {
+        main.innerHTML = `
+        <h3>${catalog.name}:</h3>
+        
+        <br>
+        <a href="#" id="movie-form" data-id="${catalog.id}">Add to Catalog</a>
+        <div id="movie-form"></div>
+        <br>
+        `
+        catalog.movies.forEach( movie => {
+            main.innerHTML += `
+            <li >${movie.title}
+             - <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
+            </li>
+            `  
+        })
+        attachClicksToButtons()
+        document.getElementById('movie-form').addEventListener('click', displayCreateMovieForm)
+    })
+}
+
 
