@@ -1,15 +1,27 @@
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'tcp://127.0.0.1:3000'
 const apiService = new ApiService() 
-let main = document.getElementById('main')
 
-const init = () => {
-    bindEventListeners()
-    renderCatalogs() 
-}
+window.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
+    document.getElementById('catalogs-home').addEventListener('click', renderCatalogs)
+    renderCatalogs()
+})
+
 
 function bindEventListeners() {
     document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
-    document.getElementById('catalogs').addEventListener('click', renderCatalogs)
+    document.getElementById('catalogs-home').addEventListener('click', renderCatalogs)
+}
+
+async function renderCatalogs() {
+    let catalogs = await apiService.fetchCatalogs()
+    main.innerHTML = ""
+    catalogs.map(catalog => { 
+        let newCatalog = new Catalog(catalog)
+
+        main.innerHTML += newCatalog.render()
+    })
+    attachClickstoLinks()
 }
 
 function displayCreateCatalogForm() {
@@ -31,34 +43,20 @@ function clearForm() {
     formDiv.innerHTML = ''
 }
 
-function createCatalog(e) {
+async function createCatalog(e) {
     e.preventDefault()
+    let main = document.getElementById('main')
     let catalog = {
-        name: e.target.querySelector("#name").value
+        name: e.target.querySelector("#catalogs").value
     }
 
-    let configObj = {
-        method: 'POST',
-        body: JSON.stringify(catalog),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
-    fetch(BASE_URL + '/catalogs', configObj)
-    .then(res => res .json()) 
-    .then(catalog => {
-        main.innerHTML += `
-        <br>
-        <li>
-        <a href="#" data-id="${catalog.id}">${catalog.name}</a>
-        - <button class="delete-catalog" data-id="${catalog.id}">Delete List</button>
-        </li>
-        `
-        attachClicksToLinks()
-        clearForm() 
-        }
-    ) 
+    let data = await apiService.fetchCreateCatalog(catalog)
+
+    let newCatalog = new Catalog(data)
+    main.innerHTML += newCatalog.render()
+    
+    attachClicksToLinks()
+    clearForm() 
 }
 
 function getCatalogs() {
@@ -233,4 +231,3 @@ function createMovie(e) {
     )
 }
 
-init()
