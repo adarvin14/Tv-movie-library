@@ -1,12 +1,10 @@
-const BASE_URL = 'tcp://127.0.0.1:3000'
+const BASE_URL = 'http://127.0.0.1:3000/home'
 const apiService = new ApiService() 
 
-window.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
-    document.getElementById('catalogs-home').addEventListener('click', renderCatalogs)
+const init = () => {
+    bindEventListeners()
     renderCatalogs()
-})
-
+}
 
 function bindEventListeners() {
     document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
@@ -14,6 +12,7 @@ function bindEventListeners() {
 }
 
 async function renderCatalogs() {
+    let main = document.getElementById('main')
     let catalogs = await apiService.fetchCatalogs()
     main.innerHTML = ""
     catalogs.map(catalog => { 
@@ -25,7 +24,7 @@ async function renderCatalogs() {
 }
 
 function displayCreateCatalogForm() {
-    let formDiv = document.querySelector('div#catalog-form')
+    let formDiv = document.getElementById('catalog-form')
     let html = `
         <br>
         <form>
@@ -57,37 +56,6 @@ async function createCatalog(e) {
     
     attachClicksToLinks()
     clearForm() 
-}
-
-function getCatalogs() {
-    let main = document.getElementById('main')
-    main.innerHTML = ""
-    fetchCatalogs()
-    .then(catalogs => {
-        main.innerHTML = `
-        <a href="#" id="catalog-form">+Create a New Movie Catalog</a>
-        <div id="catalog-form"></div>
-        `
-        catalogs.map( catalog => {
-        main.innerHTML += `
-        <br>
-        <li>
-        <a href="#" data-id="${catalog.id}">${catalog.name}</a>
-            <button class="delete-catalog" data-id="${catalog.id}">Delete Catalog</button>
-        </li>
-        ` 
-        })
-        attachClicksToLinks()
-        clearForm()
-        document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
-    })
-    
-}
-
-async function fetchCatalogs() {
-    let res = await fetch(BASE_URL + '/catalogs')
-    let data = await res.json()
-    return data
 }
 
 function attachClicksToLinks() {
@@ -174,11 +142,12 @@ function removeMovie(e) {
 }
 
 function displayCreateMovieForm(e) {
-    let catalogId = e.target.dataset.id
+    let movieId = e.target.dataset.id
     let formDivT = document.querySelector('div#movie-form')
     let htmlT = `
         <br>
-        <form data-id="${catalogId}">
+        <form data-id="${movieId}">
+        <input type="hidden" id="categoryId" value="${e.target.dataset.id}">
             <label>Title:</label>
             <input type="text" id = "title">
             <label>Release Year:</label>
@@ -194,7 +163,6 @@ function clearMovieForm() {
     let formDiv = document.querySelector('div#movie-form')
     formDiv.innerHTML = ''
 }
-
 
 function createMovie(e) {
     e.preventDefault()
@@ -231,3 +199,4 @@ function createMovie(e) {
     )
 }
 
+init() 
