@@ -1,10 +1,16 @@
-const BASE_URL = 'tcp://127.0.0.1:3000'
+const BASE_URL = 'http://localhost:3000'
+const apiService = new ApiService() 
+let main = document.getElementById('main')
 
-window.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('catalogs').addEventListener('click', getCatalogs)
-    getCatalogs()
+const init = () => {
+    bindEventListeners()
+    renderCatalogs() 
+}
 
-})
+function bindEventListeners() {
+    document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
+    document.getElementById('catalogs').addEventListener('click', renderCatalogs)
+}
 
 function displayCreateCatalogForm() {
     let formDiv = document.querySelector('div#catalog-form')
@@ -61,7 +67,7 @@ function getCatalogs() {
     fetchCatalogs()
     .then(catalogs => {
         main.innerHTML = `
-        <a href="#" id="catalog-form">+Create a Movie Catalog</a>
+        <a href="#" id="catalog-form">+Create a New Movie Catalog</a>
         <div id="catalog-form"></div>
         `
         catalogs.map( catalog => {
@@ -157,7 +163,7 @@ function removeMovie(e) {
             'Accept': 'application/json'
         }
     }
-    fetch(BASE_URL + `/movies/${movieId}`, configObj)
+    fetch(BASE_URL + `/movies/${movie.id}`, configObj)
     .then(() => {
         let buttons = document.querySelectorAll("li button")
         buttons.forEach(b => {
@@ -220,10 +226,11 @@ function createMovie(e) {
                 <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
             </li>
         `
-        clearThingForm()
+        clearMovieForm()
         attachClicksToButtons()
-        document.getElementById('thing-form').addEventListener('click', displayCreateThingForm) 
+        document.getElementById('movie-form').addEventListener('click', displayCreateMovieForm) 
         } 
     )
 }
 
+init()

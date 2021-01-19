@@ -1,47 +1,32 @@
-const BASE_URL = 'http://127.0.0.1:3001/catalogs'
-const MOVIE_URL = 'http://127.0.0.1:3001/movies'
+const CATALOGS_URL = 'http://127.0.0.1:3001/catalogs'
+const main = document.getElementById('main')
+const form = document.querySelector('form')
 
 class Catalog {
     constructor(data){
         this.id = data.id
         this.name = data.name
+        this.movies = data.movies
     }
 
-    static newCatalogForm(){
-        let newCatalogForm = document.getElementById('catalog-form')
-        newCatalogForm.innerHTML = `
-        <form onsubmit="createCatalgog(); return false;">` +
-        CatalogForm +
-        `<input type="submit" value="Create Catalog" >
-        </form>
-        <br> `  
-    }
-
-    static newMovieForm(data){
-        let newMovieForm = document.getElementById('main')
-        newMovieForm.innerHTML += `
-        <form onsubmit="createMovie(); return false;">
-            <label>Movie Title: </label>
-                <input id="movieTitle" placeholder="Title"></input>
-            <label>Release Year: </label>
-                <input id="release_year" placeholder="Release Year"></input>
-
-            <input type="hidden" id="movieID"></input>
-            <input type="hidden" id="${data}"></input>
-            <input type="submit" value="Create Song">
-        </form>
-        <br> `  
-    }
-
-    catalogHTML = function() {
+    render() {
         return `
-            <div class="card" catalog-id="${this.id}">
-            <h3><strong class="catalog-name">${this.name}</strong></h3>
-            <h3><strong class="catalog-movies">${this.movies}</strong></h3>
-        
-            <button class="delete-catalog-button">Delete Catalog</button> <br>
+        <li>
+            <a href="#" data-id="${this.id}">${this.name}</a>
+        </li>
+        ` 
+    }
+
+    renderCatalog() {
+        return `
+            <h3>${this.name}</h3>
+            <button id="add-movie" data-id="${this.id}">Add Movie</button>
+            <hr>
+            
+            <div id="add-movie-div">
             </div>
+            <br>
+            <br>
         `
     }
-
 }
