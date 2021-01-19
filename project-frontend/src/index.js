@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:3000/home'
+const BASE_URL = 'http://127.0.0.1:3000'
 const apiService = new ApiService() 
 
 const init = () => {
@@ -7,7 +7,7 @@ const init = () => {
 }
 
 function bindEventListeners() {
-    document.getElementById('catalog-form').addEventListener('click', displayCreateCatalogForm)
+    document.getElementById('catalogs-form').addEventListener('click', displayCreateCatalogForm)
     document.getElementById('catalogs-home').addEventListener('click', renderCatalogs)
 }
 
@@ -20,21 +20,22 @@ async function renderCatalogs() {
 
         main.innerHTML += newCatalog.render()
     })
-    attachClickstoLinks()
+    attachClicksToLinks()
 }
 
 function displayCreateCatalogForm() {
     let formDiv = document.getElementById('catalog-form')
     let html = `
         <br>
-        <form>
+        <form id="create-catalog">
             <label>Catalog Name:</label>
             <input type="text" id = "name">
             <input type="submit">
         </form>
     `
+    console.log
     formDiv.innerHTML = html
-    document.querySelector('form').addEventListener('submit', createCatalog)
+    document.querySelector('#create-catalog').addEventListener('submit', createCatalog)
 }
 
 function clearForm() {
@@ -46,9 +47,10 @@ async function createCatalog(e) {
     e.preventDefault()
     let main = document.getElementById('main')
     let catalog = {
-        name: e.target.querySelector("#catalogs").value
+        name: e.target.querySelector("#name").value
     }
-
+    
+     console.log(catalog)   
     let data = await apiService.fetchCreateCatalog(catalog)
 
     let newCatalog = new Catalog(data)
@@ -142,11 +144,10 @@ function removeMovie(e) {
 }
 
 function displayCreateMovieForm(e) {
-    let movieId = e.target.dataset.id
-    let formDivT = document.querySelector('div#movie-form')
+    let formDivT = document.querySelector('movie-form')
     let htmlT = `
         <br>
-        <form data-id="${movieId}">
+        <form id="create-movie">
         <input type="hidden" id="categoryId" value="${e.target.dataset.id}">
             <label>Title:</label>
             <input type="text" id = "title">

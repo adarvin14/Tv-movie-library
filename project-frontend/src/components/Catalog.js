@@ -1,4 +1,4 @@
-const CATALOGS_URL = 'http://127.0.0.1:3001/catalogs'
+const CATALOGS_URL = 'http://127.0.0.1:3000/catalogs'
 const main = document.getElementById('main')
 const form = document.querySelector('form')
 

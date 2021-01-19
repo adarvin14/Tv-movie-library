@@ -6,23 +6,23 @@ class Movie{
         this.catalog_id = data.catalog_id
     }
 
-    catalogMovieHTML = function() {
-        return `<div class="card" movie-id="${this.id}">
-                    <h3><strong class="movie-name">${this.title} by: </strong></h3> 
-                    <h3><strong class="movie-name">${this.release_year}</strong></h3>
-                    <button class="delete-movie-button">Delete Movie</button> <br>
-                </div>
+    renderMovies() {
+        return `
+        <li>
+            <a href="#" data-id="${this.id}">${this.title}</a> 
+        </li>
+        <br>
+        <button id="create-movie" data-id="${movie.id}">Add Movie</button>
         `
     }
 
     renderMovie() {
         let main = document.getElementById('main')
-        main.innerHTML += 
-            `
+        main.innerHTML += `
             <h4>Movie Title: ${this.title}</h4>
             <h4>Release Year: ${this.release_year}</h4>
             <button class="delete-movie" data-id="${this.id}">Delete Movie</button>
             <br>
-            ` 
+        ` 
     }
 }
