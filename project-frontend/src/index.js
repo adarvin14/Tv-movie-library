@@ -79,7 +79,6 @@ function attachClicksToButtons() {
 }
 
 function displayCatalog(e) {
-    console.log(e.target)
     let id = e.target.dataset.id
     let main = document.getElementById('main')
     main.innerHTML = ""
@@ -90,7 +89,7 @@ function displayCatalog(e) {
         <h3>${catalog.name}:</h3>
         
         <br>
-        <a href="#" id="movie-form" data-id="${catalog.id}">Add to Catalog</a>
+        <a href="#" id="movie-form" data-id="${catalog.id}">Add A Movie</a>
         <div id="movie-form"></div>
         <br>
         `
@@ -142,22 +141,21 @@ function removeMovie(e) {
     })
 
 }
-
-function displayCreateMovieForm(e) {
-    let formDivT = document.querySelector('movie-form')
-    let htmlT = `
+    
+function displayCreateMovieForm() {
+    let formDiv = document.getElementById('movie-form')
+    let html = `
         <br>
         <form id="create-movie">
-        <input type="hidden" id="categoryId" value="${e.target.dataset.id}">
-            <label>Title:</label>
+            <label> Title:</label>
             <input type="text" id = "title">
-            <label>Release Year:</label>
+            <label> Release Year:</label>
             <input type="text" id = "release_year">
             <input type="submit">
         </form>
-        `
-    formDivT.innerHTML = htmlT
-   document.querySelector('form').addEventListener('submit', createMovie)
+    `
+    formDiv.innerHTML = html
+    document.querySelector('#create-movie').addEventListener('submit', createMovie)
 }
 
 function clearMovieForm() {
@@ -165,39 +163,24 @@ function clearMovieForm() {
     formDiv.innerHTML = ''
 }
 
-function createMovie(e) {
+async function createMovie(e) {
     e.preventDefault()
     let main = document.getElementById('main')
-    let catalogId = e.target.dataset.id
+    let catalogId = e.target.catalog.id
     let movie = {
         title: e.target.querySelector("#title").value,
-        release_year:  e.target.querySelector("#release_year").value,
+        release_year: e.target.querySelector("#release-year").value,
         catalog_id: catalogId
     }
+    
+     console.log(catalog)   
+    let data = await apiService.fetchCreateCatalog(catalog)
 
-    let configObj = {
-        method: 'POST',
-        body: JSON.stringify(movie),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
-
-    fetch(BASE_URL + `/movies`, configObj)
-    .then(res => res .json()) 
-    .then(movie => {
-        
-        main.innerHTML += `
-            <li>${movie.description}
-                <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
-            </li>
-        `
-        clearMovieForm()
-        attachClicksToButtons()
-        document.getElementById('movie-form').addEventListener('click', displayCreateMovieForm) 
-        } 
-    )
+    let newCatalog = new Catalog(data)
+    main.innerHTML += newCatalog.render()
+    
+    attachClicksToLinks()
+    clearForm() 
 }
 
 init() 
