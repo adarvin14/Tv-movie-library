@@ -16,6 +16,7 @@ class MoviesController < ApplicationController
   def create
     @movie = Movie.new(movie_params)
     if @movie.save
+      byebug
       render json: @movie, status: :created, location: @movie
     else
       render json: @movie.errors, status: :unprocessable_entity

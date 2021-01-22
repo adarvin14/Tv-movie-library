@@ -51,11 +51,24 @@ class ApiService {
                 'Accept': 'application/json'
             }
         }
-
+        console.log()
         let res = await fetch(this.baseURL + '/movies', configObj)
         let data = await res.json()
         return data
     }
+
+    async fetchRemoveCatalog(id) {
+        let configObj = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        let res = await fetch(this.baseURL + `/catalogs/${id}`, configObj)
+    }
+
 
     async fetchRemoveMovie(id) {
         let configObj = {
