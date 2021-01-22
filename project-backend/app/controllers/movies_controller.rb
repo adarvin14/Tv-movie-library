@@ -16,8 +16,7 @@ class MoviesController < ApplicationController
   def create
     @movie = Movie.new(movie_params)
     if @movie.save
-      byebug
-      render json: @movie, status: :created, location: @movie
+      render json: @movie
     else
       render json: @movie.errors, status: :unprocessable_entity
     end
@@ -45,6 +44,6 @@ class MoviesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def movie_params
-      params.require(:movie).permit(:title, :release_year)
+      params.require(:movie).permit(:title, :release_year, :catalog_id)
     end
 end

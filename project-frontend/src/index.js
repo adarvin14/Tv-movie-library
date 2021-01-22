@@ -33,7 +33,7 @@ function displayCreateCatalogForm() {
             <input type="submit">
         </form>
     `
-    console.log
+
     formDiv.innerHTML = html
     document.querySelector('#create-catalog').addEventListener('submit', createCatalog)
 }
@@ -115,13 +115,13 @@ function displayCatalog(e) {
         `
         catalog.movies.forEach( movie => {
             main.innerHTML += `
-            <li >${movie.title}
+            <li >${movie.title}, ${movie.release_year}
                 <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
             </li>
             `  
         })
         attachClicksToButtons()
-        document.getElementById('movie-form').addEventListener('click', displayCreateMovieForm)
+        document.getElementById('movie-form').addEventListener('click',() => displayCreateMovieForm(catalog.id))
     })
 }
 
@@ -162,7 +162,7 @@ function removeMovie(e) {
 
 }
     
-function displayCreateMovieForm() {
+function displayCreateMovieForm(catalog_id) {
     let formDiv = document.getElementById('movies-form')
     let html = `
         <br>
@@ -170,7 +170,8 @@ function displayCreateMovieForm() {
             <label> Title:</label>
             <input type="text" id = "title">
             <label> Release Year:</label>
-            <input type="text" id = "release-year">
+            <input type="text" id = "release_year">
+            <input type="hidden" id="catalog_id" value="${catalog_id}">
             <input type="submit">
         </form>
     `
@@ -186,13 +187,19 @@ function clearMovieForm() {
 async function createMovie(e) {
     e.preventDefault()
     let main = document.getElementById('main')
+    
     let movie = {
         title: e.target.querySelector("#title").value,
-        release_year: e.target.querySelector("#release-year").value,
+        release_year: e.target.querySelector("#release_year").value,
+        catalog_id: e.target.querySelector("#catalog_id").value
     }
-    
+
+    console.log(movie)
+
     let data = await apiService.fetchCreateMovie(movie)
 
+    let newMovie = new Movie(data)
+    
     let configObj = {
         method: 'POST',
         body: JSON.stringify(movie),
@@ -207,21 +214,18 @@ async function createMovie(e) {
     .then(movie => {
 
         main.innerHTML += `
-            <li>${movie.description}
+            <li>${movie.title}
                 <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
             </li>
         `
         clearMovieForm()
         attachClicksToButtons()
-        document.getElementById('movie-form').addEventListener('click', displayCreateMovieForm) 
+        document.getElementById('movie-form').addEventListener('click', () => displayCreateMovieForm(movie.catalog_id)) 
         } 
     )
 
-    let newMovie = new Movie(data)
     main.innerHTML += newMovie.renderMovie()
-    
-    attachClicksToLinks()
-    clearForm() 
+
 }
 
 init() 
