@@ -11,8 +11,6 @@ class Movie{
         <li>
             <a href="#" data-id="${this.id}">${this.title}</a> 
         </li>
-        <br>
-        <button id="create-movie" data-id="${movie.id}">Add Movie</button>
         `
     }
 

@@ -147,7 +147,7 @@ function removeMovie(e) {
             'Accept': 'application/json'
         }
     }
-    fetch(BASE_URL + `/movies/${movie.id}`, configObj)
+    fetch(BASE_URL + `/movies/${e.target.dataset.id}`, configObj)
     .then(() => {
         let buttons = document.querySelectorAll("li button")
         buttons.forEach(b => {
