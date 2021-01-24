@@ -103,7 +103,7 @@ function displayCatalog(e) {
     let main = document.getElementById('main')
     main.innerHTML = ""
     fetch(BASE_URL + `/catalogs/${id}`)
-    .then(resp => resp.json())
+    .then(res => res.json())
     .then(catalog => {
         main.innerHTML = `
         <h3>${catalog.name}:</h3>
@@ -114,11 +114,8 @@ function displayCatalog(e) {
         <br>
         `
         catalog.movies.forEach( movie => {
-            main.innerHTML += `
-            <li >${movie.title}, ${movie.release_year}
-                <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
-            </li>
-            `  
+            let newMovie = new Movie(movie)
+            newMovie.renderMovie()
         })
         attachClicksToButtons()
         document.getElementById('movie-form').addEventListener('click',() => displayCreateMovieForm(catalog.id))
@@ -180,7 +177,8 @@ function displayCreateMovieForm(catalog_id) {
 }
 
 function clearMovieForm() {
-    let formDiv = document.querySelector('div#movie-form')
+    let formDiv = document.querySelector('div#movies-form')
+    
     formDiv.innerHTML = ''
 }
 
@@ -196,35 +194,18 @@ async function createMovie(e) {
 
     console.log(movie)
 
-    let data = await apiService.fetchCreateMovie(movie)
-
-    let newMovie = new Movie(data)
-    
-    let configObj = {
-        method: 'POST',
-        body: JSON.stringify(movie),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
-
-    fetch(BASE_URL + `/movies`, configObj)
-    .then(res => res .json()) 
+    await apiService.fetchCreateMovie(movie)
     .then(movie => {
+        let newMovie = new Movie(movie)
+        newMovie.renderMovie()
 
-        main.innerHTML += `
-            <li>${movie.title}
-                <button class="delete-movie" data-id="${movie.id}">Remove Movie</button>
-            </li>
-        `
         clearMovieForm()
         attachClicksToButtons()
         document.getElementById('movie-form').addEventListener('click', () => displayCreateMovieForm(movie.catalog_id)) 
         } 
     )
 
-    main.innerHTML += newMovie.renderMovie()
+    // main.innerHTML += newMovie.renderMovie()
 
 }
 

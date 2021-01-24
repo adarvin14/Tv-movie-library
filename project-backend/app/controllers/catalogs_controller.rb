@@ -16,7 +16,7 @@ class CatalogsController < ApplicationController
   def create
     @catalog = Catalog.new(catalog_params)
     if @catalog.save
-      render json: @catalog, status: :created, location: @catalog
+      render json: @catalog
     else
       render json: @catalog.errors, status: :unprocessable_entity
     end

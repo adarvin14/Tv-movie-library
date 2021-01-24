@@ -19,10 +19,9 @@ class Movie{
     renderMovie() {
         let main = document.getElementById('main')
         main.innerHTML += `
-            <h4>Movie Title: ${this.title}</h4>
-            <h4>Release Year: ${this.release_year}</h4>
-            <button class="delete-movie" data-id="${this.id}">Delete Movie</button>
-            <br>
-        ` 
+        <li >${this.title}, ${this.release_year}
+            <button class="delete-movie" data-id="${this.id}">Remove Movie</button>
+        </li>
+        `
     }
 }
