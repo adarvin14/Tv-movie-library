@@ -30,6 +30,7 @@ function displayCreateCatalogForm() {
         <form id="create-catalog">
             <label>Catalog Name:</label>
             <input type="text" id = "name">
+
             <input type="submit">
         </form>
     `
@@ -52,32 +53,13 @@ async function createCatalog(e) {
     
     let data = await apiService.fetchCreateCatalog(catalog)
 
-    let configObj = {
-        method: 'POST',
-        body: JSON.stringify(catalog),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    }
+        let c = new Catalog(data)
 
-    fetch(BASE_URL + `/catalogs`, configObj)
-    .then(res => res .json()) 
-    .then(catalog => {
-
-        main.innerHTML += `
-            <li>${catalog.name}
-                <button class="delete-catalog" data-id="${catalog.id}">Remove Catalog</button>
-            </li>
-        `
+         main.innerHTML += c.render()
+       
         clearForm()
         attachClicksToLinks()
         document.getElementById('catalogs-form').addEventListener('click', displayCreateCatalogForm) 
-        } 
-    )
-
-    let newCatalog = new Catalog(data)
-    main.innerHTML += newCatalog.render()
 }
 
 function attachClicksToLinks() {
@@ -85,6 +67,9 @@ function attachClicksToLinks() {
     catalogs.forEach(catalog => {
         catalog.addEventListener('click', displayCatalog)
     })
+}
+
+function attachDeletesToButtons() { 
     let buttons = document.querySelectorAll(".delete-catalog")
     buttons.forEach(btn => {
         btn.addEventListener('click', removeCatalog)
@@ -101,25 +86,17 @@ function attachClicksToButtons() {
 function displayCatalog(e) {
     let id = e.target.dataset.id
     let main = document.getElementById('main')
-    main.innerHTML = ""
-    fetch(BASE_URL + `/catalogs/${id}`)
-    .then(res => res.json())
-    .then(catalog => {
-        main.innerHTML = `
-        <h3>${catalog.name}:</h3>
-        
-        <br>
-        <a href="#" id="movie-form" data-id="${catalog.id}">Add A Movie</a>
-        <div id="movies-form"></div>
-        <br>
-        `
-        catalog.movies.forEach( movie => {
+    let c = Catalog.all.find(c => c.id == id)
+    main.innerHTML = c.renderCatalog()
+        c.movies.forEach( movie => {
             let newMovie = new Movie(movie)
             newMovie.renderMovie()
+            
+            attachClicksToLinks()
+            attachClicksToButtons()
         })
-        attachClicksToButtons()
-        document.getElementById('movie-form').addEventListener('click',() => displayCreateMovieForm(catalog.id))
-    })
+    document.getElementById('add-movie').addEventListener('click',() => displayCreateMovieForm(c.id))
+    attachDeletesToButtons()
 }
 
 function removeCatalog(e) {
@@ -131,7 +108,7 @@ function removeCatalog(e) {
             'Accept': 'application/json'
         }
     }
-    fetch(BASE_URL + `/catalog/${e.target.dataset.id}`, configObj)
+    fetch(BASE_URL + `/catalogs/${e.target.dataset.id}`, configObj)
     .then(() => {
         renderCatalogs()}
     )
@@ -160,7 +137,7 @@ function removeMovie(e) {
 }
     
 function displayCreateMovieForm(catalog_id) {
-    let formDiv = document.getElementById('movies-form')
+    let formDiv = document.getElementById('main')
     let html = `
         <br>
         <form id="create-movie">
@@ -177,7 +154,7 @@ function displayCreateMovieForm(catalog_id) {
 }
 
 function clearMovieForm() {
-    let formDiv = document.querySelector('div#movies-form')
+    let formDiv = document.querySelector('#main')
     
     formDiv.innerHTML = ''
 }
@@ -195,14 +172,24 @@ async function createMovie(e) {
     console.log(movie)
 
     await apiService.fetchCreateMovie(movie)
-    .then(movie => {
-        let newMovie = new Movie(movie)
-        newMovie.renderMovie()
+    .then(movie => { 
+        let main = document.getElementById('main')
+        let id = movie.catalog.id
+        let c = Catalog.all.find(c => c.id == id)
+        c.movies.push(movie)
+        debugger
+        main.innerHTML += c.renderCatalog()
+            c.movies.forEach( movie => {
+                let newMovie = new Movie(movie)
+                newMovie.renderMovie()
+                
+                attachClicksToLinks()
+            })
 
-        clearMovieForm()
+        //clearMovieForm()
         attachClicksToButtons()
-        document.getElementById('movie-form').addEventListener('click', () => displayCreateMovieForm(movie.catalog_id)) 
         } 
+    
     )
 
     // main.innerHTML += newMovie.renderMovie()

@@ -7,7 +7,9 @@ class Catalog {
         this.id = data.id
         this.name = data.name
         this.movies = data.movies
+        Catalog.all.push(this)
     }
+    static all = []
 
     render() {
         return `
@@ -21,6 +23,7 @@ class Catalog {
         return `
             <h3>${this.name}</h3>
             <button id="add-movie" data-id="${this.id}">Add A Movie</button>
+            <button class="delete-catalog" data-id="${this.id}">Remove Catalog</button>
             <hr>
 
             
