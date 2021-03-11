@@ -186,12 +186,10 @@ async function createMovie(e) {
                 attachClicksToLinks()
             })
 
-        //clearMovieForm()
         attachClicksToButtons()
         } 
     
     )
-
     // main.innerHTML += newMovie.renderMovie()
 
 }
