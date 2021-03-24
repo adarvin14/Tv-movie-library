@@ -4,7 +4,39 @@ const apiService = new ApiService()
 const init = () => {
     bindEventListeners()
     renderCatalogs()
+    // console.log("a")
 }
+
+// CREATE A SEARCH BAR WITHOUT A SUBMIT BUTTON, WORKS AS YOU TYPE
+
+// create search bar and and add event listener for each key input
+// define what is being searched
+// make the search work regardless of capitalization
+// filter out catalogs based on the input
+// return filtered catalogs
+// render only filtered catalogs to the page
+
+const searchBar = document.getElementById('searchBar')
+const catalogsList = document.getElementById('main')
+
+searchBar.addEventListener('keyup', (e) => {
+    clearMain()
+
+    let catalogs = Catalog.all
+
+    const searchTerm = e.target.value.toLowerCase()
+
+    const filterCatalogs = catalogs.filter((catalog) => {
+        return (
+            catalog.name.toLowerCase().includes(searchTerm)
+        )
+    })
+    filterCatalogs.forEach(catalog => {
+        catalogsList.innerHTML += catalog.render()
+    }) 
+    console.log(filterCatalogs)
+})
+
 
 function bindEventListeners() {
     document.getElementById('catalogs-form').addEventListener('click', displayCreateCatalogForm)
@@ -12,15 +44,26 @@ function bindEventListeners() {
 }
 
 async function renderCatalogs() {
+    // console.log("c")
     let main = document.getElementById('main')
     let catalogs = await apiService.fetchCatalogs()
+    // Catalog = []
+    // we want to reset the instances of array of catalogs
+    // console.log("b")
     main.innerHTML = ""
+    Catalog.all = []
     catalogs.map(catalog => { 
         let newCatalog = new Catalog(catalog)
 
         main.innerHTML += newCatalog.render()
+        console.log(Catalog.all)
     })
     attachClicksToLinks()
+}
+
+function clearMain() {
+    let formDiv = document.getElementById('main')
+    formDiv.innerHTML = ''
 }
 
 function displayCreateCatalogForm() {

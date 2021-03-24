@@ -6,6 +6,8 @@ class Movie{
         this.catalog_id = data.catalog_id
     }
 
+    static all = []
+
     renderMovies() {
         return `
         <li>
